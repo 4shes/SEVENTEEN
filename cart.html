@@ -447,7 +447,7 @@ margin: 0 12px 20px 0;
         
         <div>
             <label for="address">Address:</label>
-            <textarea id="address" name="address" rows="4" required></textarea>
+            <textarea id="address" name="address" rows="2" required></textarea>
         </div>
         <button type="submit">Checkout</button>
     </form>
@@ -660,12 +660,11 @@ function updateCartCount() {
     });
 });
 
-
-    function validateForm() {
+function validateForm() {
     const contactField = document.getElementById('contact');
     if (contactField.value.trim() === '') {
-      alert('Please provide your contact information.');
-      return false;
+        alert('Please provide your contact information.');
+        return false;
     }
 
     let alertMessage = 'Thank you for your order!\n\n';
@@ -675,14 +674,24 @@ function updateCartCount() {
     alertMessage += `- Email: ${document.getElementById('email').value}\n`;
     alertMessage += `- Address: ${document.getElementById('address').value}\n\n`;
     alertMessage += 'Ordered Item(s):\n';
-    cart.forEach(item => {
-    alertMessage += `- ${item.name} (${item.price})\n`;
+
+    const cartItems = document.querySelectorAll('#cart-body tr');
+    let total = 0; // Initialize total price
+    cartItems.forEach(item => {
+        const productName = item.querySelector('td:nth-child(2)').textContent;
+        const productPrice = item.querySelector('td:nth-child(3)').textContent;
+        const quantity = item.querySelector('input[type="text"]').value;
+        const totalPrice = item.querySelector('td:nth-child(5)').textContent;
+
+        alertMessage += `${productName} x ${quantity} = ${totalPrice}\n`;
+        total += parseFloat(totalPrice.replace(/[^0-9.]/g, '')); // Add to total price
     });
 
+    alertMessage += `\nTotal: ₱${total.toLocaleString()}`; // Display total price with peso sign and commas
     alert(alertMessage);
 
     return true;
-  }
+}
 
     function checkout() {
       document.getElementById('thank-you-text').style.display = 'block';
